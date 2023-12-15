@@ -28,11 +28,12 @@ def preparacaoImagemEContornos():
     
     #fiz isso para poder tratar a mao como um componnet
     frame = cv2.bitwise_not(frame)
+    
     cv2.imshow("imagem original",imgOriginal)
     cv2.imshow('Segmented', frame)
     num_labels, labeled_image = cv2.connectedComponents(frame)
 
-    component_mask = np.uint8(labeled_image == 1) * 255
+    component_mask = np.uint8(labeled_image == 2) * 255
     # Encontra os contornos do componente
     contours, hierarchy = cv2.findContours(component_mask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -43,8 +44,8 @@ while True:
     ret, frame = cap.read()
     imgOriginal  = cv2.rotate(frame,cv2.ROTATE_90_COUNTERCLOCKWISE)
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
     frame  = cv2.rotate(frame,cv2.ROTATE_90_COUNTERCLOCKWISE)
+
     preparacaoImagemEContornos()
     # resultado = pontoMaisEsquerda(frame)
     # print(resultado)
