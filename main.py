@@ -8,16 +8,26 @@ threshold = 150
 frame=None
 
 def pontoMaisEsquerda(imagem):
-    pontoEncontrado=False
-    for coluna in range(imagem.cols()):
-        for linha in range(imagem.rows()):
-            if(not pontoEncontrado):
-                return 
-            elif(imagem.at(linha,coluna)==255):
-                pontoEncontrado=True
-                return (linha,coluna)
+    for linha in range(20, 640):
+        indices_brancos = np.where(imagem[linha, 25:480] == 255)[0]
+        if indices_brancos.size > 0:
+            coluna = indices_brancos[0] + 25
+            return (linha, coluna)
             
-        
+def pontoMaisDireita(imagem):
+    for linha in range(639, 20, -1):
+        indices_brancos = np.where(imagem[linha, 25:480] == 255)[0]
+        if indices_brancos.size > 0:
+            coluna = indices_brancos[-1] + 25
+            return (linha, coluna)
+            
+def pontoMaisAlto(imagem):
+    for coluna in range(25, 480):
+        indices_brancos = np.where(imagem[20:640, coluna] == 255)[0]
+        if indices_brancos.size > 0:
+            linha = indices_brancos[0] + 20
+            return (linha, coluna)
+            
 def preparacaoImagemEContornos():
     global frame
     global imgOriginal
@@ -29,8 +39,8 @@ def preparacaoImagemEContornos():
     #fiz isso para poder tratar a mao como um componnet
     frame = cv2.bitwise_not(frame)
     
-    cv2.imshow("imagem original",imgOriginal)
-    cv2.imshow('Segmented', frame)
+    # cv2.imshow("imagem original",imgOriginal)
+    # cv2.imshow('Segmented', frame)
     num_labels, labeled_image = cv2.connectedComponents(frame)
 
     component_mask = np.uint8(labeled_image == 2) * 255
@@ -47,10 +57,12 @@ while True:
     frame  = cv2.rotate(frame,cv2.ROTATE_90_COUNTERCLOCKWISE)
 
     preparacaoImagemEContornos()
-    # resultado = pontoMaisEsquerda(frame)
-    # print(resultado)
+    esquerda = pontoMaisEsquerda(frame)
+    direita = pontoMaisDireita(frame)
+    alto = pontoMaisAlto(frame)
     # Exibe o componente usando cv2.imshow
     cv2.imshow(f'Img Original', imgOriginal)
+    
     if cv2.waitKey(1)=="27":
         break
     
