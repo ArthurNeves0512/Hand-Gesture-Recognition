@@ -73,7 +73,7 @@ def preparacaoImagemEContornos():
     
     
 
-    imgOriginal = cv2.drawContours(imgOriginal, contorno_filtrado, -1,(0,255,0),thickness=2)
+    imgOriginal = cv2.drawContours(imgOriginal, contours, -1,(0,255,0),thickness=2)
     orientacao = "Horizontal" if w>h else "Vertical"
     cv2.putText(imgOriginal,orientacao,(188,513),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),1)
     
